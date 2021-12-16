@@ -1,35 +1,13 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.7;
+pragma solidity 0.8.10;
 
-interface BEP20 {
-    function totalSupply() external view returns (uint256);
-    function name() external view returns (string memory);
-    function symbol() external view returns (string memory);
-    function decimals() external view returns (uint8);
-    function balanceOf(address account) external view returns (uint256);
-    function transfer(address recipient, uint256 amount) external returns (bool);
-    function allowance(address owner, address spender) external view returns (uint256);
-    function approve(address spender, uint256 amount) external returns (bool);
-    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
-}
+import "@openzeppelin/contracts/interfaces/IERC20.sol";
+import "@openzeppelin/contracts/interfaces/IERC20Metadata.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/Context.sol";
 
-library SafeMath {
-    function add(uint a, uint b) public pure returns (uint) {
-        uint c = a + b;
-        require(c >= a);
-        return c;
-    }
-
-    function sub(uint a, uint b) public pure returns (uint) {
-        require(b <= a);
-        return a - b;
-    }
-}
-
-contract PEAK is BEP20 {
+contract PEAK is IERC20, IERC20Metadata, Context {
     string private _symbol;
     string private _name;
     uint8 private _decimals;
@@ -40,7 +18,7 @@ contract PEAK is BEP20 {
     using SafeMath for uint256;
 
     constructor() {
-        address _contractCreator = msg.sender;
+        address _contractCreator = _msgSender();
         _symbol = "PEAK";
         _name = "Peakmines PEAK";
         _decimals = 18;
@@ -85,7 +63,7 @@ contract PEAK is BEP20 {
         override
         returns (bool)
     {
-        address _from = msg.sender;
+        address _from = _msgSender();
         bool _enoughBalance = _balances[_from] >= _value;
         bool _isValidAddressToTransfer = _to != address(0);
 
@@ -109,7 +87,7 @@ contract PEAK is BEP20 {
 
         require(_isValidAddressToDelegate, "Invalid transaction");
 
-        address _tokenOwner = msg.sender;
+        address _tokenOwner = _msgSender();
         _allowances[_tokenOwner][_delegate] = _value;
         emit Approval(_tokenOwner, _delegate, _value);
 
@@ -122,7 +100,7 @@ contract PEAK is BEP20 {
         address _to,
         uint256 _value
     ) public override returns (bool) {
-        address _delegate = msg.sender;
+        address _delegate = _msgSender();
         bool _isAllowed = _allowances[_from][_delegate] >= _value;
         bool _enoughBalance = _balances[_from] >= _value;
         bool _isValidAddressToTransfer = _to != address(0);
@@ -154,7 +132,7 @@ contract PEAK is BEP20 {
         public
         returns (bool)
     {   
-        address _tokenOwner = msg.sender;
+        address _tokenOwner = _msgSender();
         uint _value = _allowances[_tokenOwner][_delegate].add(_addedValue);
         approve(_delegate, _value);
         return true;
@@ -165,7 +143,7 @@ contract PEAK is BEP20 {
         public
         returns (bool)
     {
-        address _tokenOwner = msg.sender;
+        address _tokenOwner = _msgSender();
         uint256 _delegateAllowance = _allowances[_tokenOwner][_delegate];
         bool _hasEnoughAllowance = _delegateAllowance >= _subtractedValue;
 

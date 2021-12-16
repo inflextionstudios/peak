@@ -1,0 +1,27 @@
+{
+  "name": "peak",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inflextionstudios/peak.git"
+  },
+  "author": "Inflextion Studios",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/inflextionstudios/peak/issues"
+  },
+  "homepage": "https://github.com/inflextionstudios/peak#readme",
+  "devDependencies": {
+    "solc": "^0.8.10",
+    "truffle-plugin-verify": "^0.5.20"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.4.1",
+    "@truffle/hdwallet-provider": "^2.0.0"
+  }
+}
